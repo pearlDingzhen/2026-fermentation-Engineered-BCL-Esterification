@@ -13,7 +13,3 @@ This repository contains computational data for the engineering of BCL (butyrola
 ## License
 
 CC-BY-4.0
-
-## Citation
-
-Xu, T., Tian, X., Wang, Q., Si, G., Mei, J., Sha, A., Rao, Z., Zhang, W., & Zhang, X. (2026). Engineered BCL for Esterification Reactions [Dataset]. GitHub. https://github.com/pearlDingzhen/2026-fermentation-Engineered-BCL-Esterification
