@@ -1,6 +1,6 @@
-# Engineered BCL for Esterification Reactions
+# Engineered Burkholderia cepacia Lipase for Esterification Reactions
 
-This repository contains computational data for the engineering of BCL (butyrolactone biosynthesis-related enzyme) for improved esterification activity, supporting the 2026 fermentation research project.
+This repository contains computational data for the engineering of Burkholderia cepacia Lipase for improved esterification activity, supporting the 2026 fermentation research project.
 
 ## Related Publication
 
