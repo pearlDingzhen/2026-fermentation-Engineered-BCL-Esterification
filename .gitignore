@@ -1,0 +1,85 @@
+# GitHub Repository .gitignore for Academic Research Data
+
+# ===================
+# System Files
+# ===================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# ===================
+# IDE and Editor Files
+# ===================
+.vscode/
+.idea/
+*.sublime-*
+.project
+.settings/
+*.code-workspace
+
+# ===================
+# Logs and Debug Files
+# ===================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.out
+
+# ===================
+# Python
+# ===================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# ===================
+# R
+# ===================
+.Rhistory
+.Rapp.history
+.Rprofile
+.Renviron
+*.rds
+
+# ===================
+# Jupyter Notebooks
+# ===================
+.ipynb_checkpoints/
+*.nbconvert.html
+
+# ===================
+# Large Data Files (if needed)
+# ===================
+# *.big
+# *.h5
+# *.hdf5
+# *.pdb
+
+# ===================
+# OS Specific
+# ===================
+# Windows
+Desktop.ini
+
+# Linux
+.dbus/
+.ICEauthority
+.Xauthority
+
+# macOS
+.AppleDouble
+.LSOverride

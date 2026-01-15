@@ -1,0 +1,11 @@
+ &cntrl
+  imin=1,
+  ntx=1, irest=0,
+  maxcyc=40000, ncyc=20000,
+  ntpr=4000, ntwr=4000, ntwx=0,
+  cut=9.0,
+  ntr=1,
+  restraint_wt=0.1,
+  restraintmask='@CA',
+ /
+
