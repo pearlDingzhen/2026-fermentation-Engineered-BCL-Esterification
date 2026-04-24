@@ -1,0 +1,143 @@
+Response 1: Computational Details — MD Protocol, Simulation Length, Velocity Handling, and Ligand Parametrization
+
+We sincerely thank the reviewer for the careful examination of our computational methodology and the GitHub repository. We acknowledge the deficiencies in our original manuscript and have substantially revised the Materials and Methods section and the repository accordingly. Below we address each point in detail.
+
+
+1. Explicit AMBER Declaration and Complete MD Protocol
+
+We have added an explicit statement in Section 2.5 that all MD simulations were performed using the AMBER 22 simulation package with the pmemd.cuda GPU-accelerated MD engine.
+
+The complete MD protocol consisted of four sequential stages. We have updated the GitHub repository to include all input files (em.in, heat.in, rs.in, and 300K.in) and present the full protocol here:
+
+| Stage | File | Key Parameters | Duration |
+|---|---|---|---|
+| 1. Energy Minimization | em.in | imin=1, maxcyc=40000 (20,000 steepest descent + 20,000 conjugate gradient), cutoff=9.0 Å, backbone CA restraints (force constant = 0.1 kcal/mol/Å²) | — |
+| 2. Heating | heat.in | imin=0, dt=0.002 ps, nstlim=200000, NVT (ntb=1, ntp=0), linear temperature ramp 10 K → 300 K over first 5,000 steps (via &wt namelist), Langevin thermostat (ntt=3, gamma_ln=2.0 ps⁻¹), SHAKE on bonds involving hydrogen (ntc=2, ntf=2), CA restraints (0.1 kcal/mol/Å²) | 400 ps |
+| 3. Restraint MD | rs.in | imin=0, dt=0.002 ps, nstlim=500000, NPT (ntb=2, ntp=1, isotropic, P_ref=1 atm), T=300 K, Langevin thermostat (gamma_ln=2.0 ps⁻¹), SHAKE (ntc=2, ntf=2), CA restraints (0.1 kcal/mol/Å²) | 1 ns |
+| 4. Production MD | 300K.in | imin=0, dt=0.002 ps, nstlim=500000000, NPT (ntb=2, ntp=1, isotropic, P_ref=1 atm), T=300 K, Langevin thermostat (gamma_ln=2.0 ps⁻¹), SHAKE (ntc=2, ntf=2), no restraints, 3 independent replicas launched from the rs.in restart structure | 1 μs per replica |
+
+System Preparation Details:
+- Initial structure: Composite model of BaLIP (Burkholderia ambifaria lipase) constructed by grafting the RFAA-predicted substrate-binding pocket into the 8HFW (PDB ID: 8HFW) crystal structure scaffold, dimeric form
+- Protonation states: Predicted by H++ at pH 7.0 and manually verified against the catalytic mechanism
+- Force field: RSFF2 (a residue-specific force field that modifies AMBER ff14SB with CHARMM-like CMAP backbone corrections and refined side-chain dihedral parameters for selected amino acids [Glu, Gln, Asn], as described in Zhou et al., J. Phys. Chem. B, 2015)
+- Water model: TIP3P, solvated with an 8 Å buffer (solvateBox TIP3PBOX 8)
+- Counterions: 32 Na⁺ and 18 Cl⁻ added to neutralize the system at ~150 mM ionic strength
+- Total system size: ~43,700 atoms, ~12,360 residues (including ~11,740 water molecules)
+- Hydrogen mass repartitioning (parmed HMassRepartition): Applied to the topology, allowing a 4 fs effective integration time step with the 2 fs nominal time step
+- Trajectory output: NetCDF binary format (ioutfm=1), frames written every 20,000 steps (40 ps)
+
+Additional note: The production run uses nstlim=500,000,000 (theoretical maximum of 1 μs). This value is set intentionally large so that the simulation saturates the cluster walltime limit; restart files are written every 20,000 steps (ntwr=20000, every 40 ps), enabling seamless continuation. All three replicas completed the full 1 μs.
+
+AMBER version: AMBER 22 with pmemd.cuda (GPU-accelerated) on NVIDIA GPUs.
+
+
+2. Simulation Length Discrepancy Correction
+
+We thank the reviewer for identifying the discrepancy between the simulation length stated in the manuscript (100 ns) and the value implied by the input files (nstlim=500,000,000 steps × 0.002 ps = 1 μs). The stated "100 ns" in the original manuscript was a mistake in drafting — the actual production simulations were run for 1 μs per replica (3 replicas, totaling 3 μs of aggregate sampling). We have corrected Section 2.5 of the manuscript to reflect the actual simulation length of 1 μs.
+
+
+3. Velocity Reset at Production Run (irest=0)
+
+The reviewer correctly notes that our production input file (300K.in) uses irest=0 with ntx=1, which reads only coordinates from the restart file and reassigns velocities from a Maxwell-Boltzmann distribution at the target temperature, rather than carrying forward the equilibrated velocities from the preceding stage. We acknowledge that the recommended practice is to use irest=1 and ntx=5 to preserve the velocity distribution from equilibration into the production phase, and we apologize for this methodological oversight.
+
+We would like to note the following mitigating factors in the context of our specific simulation protocol:
+
+(a) A multi-stage equilibration protocol preceded production: 400 ps NVT heating (10→300 K with CA restraints) followed by 1 ns NPT restraint MD (T=300 K, CA restraints). This ensured that the atomic positions — the primary determinant of the potential energy landscape — were thoroughly equilibrated before production sampling began.
+
+(b) The production run spans 1 μs (5 × 10⁸ steps) per replica. Given this length, the velocity distribution re-equilibrates within the first few nanoseconds — a negligible fraction (<0.5%) of the total trajectory. To ensure conservatism in our analysis, we excluded the initial 5 ns of each production trajectory as additional equilibration before computing PRS statistics and other observables.
+
+(c) Three independent replicas were launched from the same rs.in restart coordinates. While the shared positional starting point is a limitation, the independent velocity initialization for each replica provides uncorrelated initial momenta, which, over microsecond-scale sampling, contributes to exploration of distinct regions of phase space.
+
+We fully accept that irest=1, ntx=5 is the standard and recommended protocol for production MD simulations, and we have adopted this practice in our ongoing and future work. We have added a note in the revised manuscript acknowledging this point and have annotated the GitHub repository accordingly.
+
+
+4. Ligand Parametrization Details
+
+We thank the reviewer for noting the absence of ligand parametrization information from both the manuscript and the GitHub repository. The parametrization files exist in our local workflow but were inadvertently omitted from the repository. We have now incorporated the complete ligand parametrization into both the manuscript (Section 2.5) and the GitHub repository (under molecule_top/).
+
+The five molecular species involved in the MD simulations are:
+
+| Molecule | Residue Name | Description | Role |
+|---|---|---|---|
+| Isoamyl alcohol | YWC | 3-methyl-1-butanol, 18 atoms | Target esterification substrate |
+| Isoamyl acetate | YWZ | 3-methylbutyl acetate, 23 atoms | Esterification product / hydrolysis substrate |
+| Ethanol | YC | Ethanol, 9 atoms | Competitive inhibitor (small alcohol probe) |
+| Acetic acid | YS | Acetic acid, 8 atoms | Esterification acid substrate |
+| Acetyl-enzyme intermediate | SEO | Covalent Ser-acetyl adduct, 18 heavy atoms | Acyl-enzyme reaction intermediate for LigandMPNN template |
+
+Parametrization Workflow:
+All four small-molecule ligands (YWC, YWZ, YC, YS) were parametrized using the standard AMBER ligand parametrization pipeline:
+
+1. Initial 3D structures were generated and energy-minimized at the HF/6-31G* level in Gaussian 16.
+2. Partial atomic charges were computed using the AM1-BCC charge model via antechamber (Semi-empirical AM1 with Bond Charge Correction).
+3. GAFF2 (General AMBER Force Field 2) atom types were assigned, and bonded and non-bonded parameters were derived from the GAFF2 parameter set.
+4. Missing force field parameters were identified by parmchk2; only YWZ (isoamyl acetate) required one additional improper torsion parameter (c3-o-c-os, force constant = 1.1 kcal/mol/rad², phase = 180°, periodicity = 2.0, penalty score = 49.6), which was supplied via its frcmod file.
+5. The ligands were loaded into tleap via their .lib (pre-built library) and .frcmod files: source leaprc.gaff2; loadoff YWC.lib; loadamberparams YWC.frcmod (and analogously for YWZ, YC, and YS).
+
+The SEO (acetyl-enzyme intermediate) was constructed as a modified serine residue in which the side-chain hydroxyl oxygen (OG) forms a covalent ester bond with an acetyl group. This residue was built manually as an AMBER prepin file, with bonded parameters derived by analogy from existing GAFF2 and ff14SB parameters and partial charges obtained from a RESP fit at the HF/6-31G* level. Two frcmod files (frcmod1.SEO and frcmod2.SEO) supply the necessary dihedral parameters for the ester linkage connecting the serine side chain to the acetyl moiety.
+
+All parametrization files newly added to the GitHub repository include:
+
+| File Type | Files | Description |
+|---|---|---|
+| .mol2 | YWC.mol2, YWZ.mol2, YC.mol2, YS.mol2 | Tripos Mol2 format: atom coordinates, GAFF2 atom types, AM1-BCC charges, and bond connectivity |
+| .lib | YWC.lib, YWZ.lib, YC.lib, YS.lib | AMBER pre-built library files for tleap |
+| .frcmod | YWC.frcmod, YWZ.frcmod, YC.frcmod, YS.frcmod, frcmod1.SEO, frcmod2.SEO | Supplementary force field parameter files |
+| .chg | YWC.chg, YWZ.chg, YC.chg, YS.chg | AM1-BCC partial charge output from antechamber |
+| .prepin | SEO.prepin | AMBER prep input for the acetyl-enzyme intermediate |
+| .pdb | YWC.pdb, YWZ.pdb, YC.pdb, YS.pdb | PDB-format structures of each ligand for reference |
+
+These details have been incorporated into a new "Ligand Parametrization" subsection within Section 2.5 (Molecular Modeling and Mutant Design) of the revised manuscript.
+
+
+Response 2: Clarification of "8HFW will be used for subsequent studies"
+
+We apologize for the ambiguity of this statement. To clarify the structural modeling strategy:
+
+The 8HFW crystal structure (PDB ID: 8HFW), which shares high sequence identity with BaLIP, was used as the primary protein scaffold due to its reliable crystallographic backbone geometry. However, the substrate-binding pocket of 8HFW lacks the target ligands (isoamyl alcohol, isoamyl acetate, etc.) and may exhibit conformational differences in flexible loop regions relevant to substrate recognition. To address this, we used RoseTTAFold All-Atom (RFAA) to predict the structure of BaLIP with the target substrates docked, yielding a model of the binding pocket in a substrate-bound conformation. The RFAA-predicted active-site region was then structurally aligned and grafted into the 8HFW scaffold to produce a composite model that combines the crystallographic quality of the overall fold with the substrate-adapted pocket geometry from RFAA.
+
+This composite model served as the starting structure for all subsequent MD simulations, PRS analysis, and LigandMPNN-based mutant design. We have revised the manuscript to clearly describe this hybrid modeling workflow and have removed the vague phrase "8HFW will be used for subsequent studies."
+
+
+Response 3: Revision Regarding the Oligomeric State
+
+We thank the reviewer for pointing out the inaccuracies in our description. We have made the following corrections:
+
+(1) Regarding RFAA: The reviewer is correct that RoseTTAFold-All-Atom (RFAA) is a structural prediction tool and not an MD engine. The original phrasing "RFAA provided the initial conformational hypothesis and conducted molecular dynamics (MD) simulations" was erroneous. We have revised this passage to accurately reflect the workflow: RFAA was used solely for initial protein-ligand complex prediction. All MD simulations were subsequently performed using AMBER 22 (pmemd.cuda) with the RSFF2 force field. We have corrected this language throughout the revised manuscript.
+
+(2) Regarding dimer verification: We acknowledge that the term "verified" overstates our findings, as we did not perform a rigorous thermodynamic assessment (e.g., free energy calculation of dimerization). We have toned down the language to "supported" or "consistent with" throughout. Our evidence for the dimer being the functional form is based on a comparative structural and geometric analysis of independent 1 μs MD simulations for both the monomeric (mo_) and dimeric (di_) forms:
+
+  - Both forms were simulated under identical conditions (3 replicas × 1 μs each).
+  - PRS (Pre-reaction State) analysis showed that the dimeric form exhibits a substantially higher population of catalytically competent conformations (i.e., frames in which the catalytic Ser–substrate distance ≤ 3.5 Å and the Ser–His catalytic base distance ≤ 3.0 Å) compared to the monomeric form.
+  - RMSD and RMSF analyses indicated greater structural stability of the active-site geometry in the dimer.
+
+We have revised the manuscript to present this as a structurally motivated working hypothesis rather than a definitive thermodynamic proof, and we have removed the claim that MD alone "verifies" the dimeric state.
+
+
+Response 4: PRS Geometric Cutoffs
+
+We have added the following technical details to Section 2.5 of the revised manuscript:
+
+A frame from the MD trajectory is classified as being in the Pre-reaction State (PRS) when it simultaneously satisfies two geometric criteria measured from the catalytic active site:
+
+  (a) The distance between the catalytic serine Oγ atom (nucleophile) and the substrate electrophilic carbon is ≤ 3.5 Å. This threshold captures the spatial proximity required for nucleophilic attack.
+  (b) The distance between the catalytic serine Oγ atom and the Nε2 atom of the catalytic histidine (general base) is ≤ 3.0 Å. This ensures the proton relay network is properly positioned for catalysis.
+
+These cutoffs are based on the typical hydrogen bond distance and van der Waals contact ranges for these atom pairs in serine hydrolases, and are consistent with geometric criteria used in prior computational studies of lipase catalytic mechanisms. For the hydrolysis system (YWZ), an alternative definition using the SerOγ–substrate C distance (≤ 3.5 Å) and the SerOγ–substrate C–substrate O angle (75°–105°, representing the Bürgi–Dunitz trajectory for nucleophilic addition) was also evaluated and yielded consistent results.
+
+The PRS population is reported as the percentage of trajectory frames satisfying both criteria simultaneously, computed via cpptraj from the AMBER suite.
+
+
+---
+Summary of All Manuscript Revisions Made:
+- Section 2.5: Explicitly stated "AMBER 22 (pmemd.cuda)" as the MD engine
+- Section 2.5: Corrected simulation length from "100 ns" to "1 μs per replica (3 replicas)"
+- Section 2.5: Added complete 4-stage MD protocol table with all parameters
+- Section 2.5: Added new "Ligand Parametrization" subsection describing the GAFF2 + AM1-BCC workflow for all 5 molecular species
+- Section 2.5: Added PRS geometric cutoff definitions (Ser–substrate ≤ 3.5 Å, Ser–His ≤ 3.0 Å)
+- Section 2.5: Added note acknowledging the irest=0 velocity reinitialization
+- Section 2.5: Clarified hybrid structural modeling strategy (8HFW scaffold + RFAA pocket)
+- Section 3.3.1: Corrected RFAA description (structural prediction tool, not MD engine)
+- Section 3.3.1: Toned down dimer verification claims ("verified" → "supported by")
+- Figure 3 caption: Updated to clearly label dimeric vs monomeric comparison
+- GitHub repository: Added all .in files (em.in, heat.in, rs.in, 300K.in), ligand parametrization files (.mol2, .lib, .frcmod, .chg, .prepin, .pdb), and system construction scripts (top-di.sh, a_mod_top_RSFF2C_strict.py, RSFF2C_CMAP_final.dat)

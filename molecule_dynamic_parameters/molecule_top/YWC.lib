@@ -1,0 +1,141 @@
+!!index array str
+ "YWC"
+!entry.YWC.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
+ "C" "c3" 0 1 131072 1 6 -0.226156
+ "C1" "c3" 0 1 131072 2 6 0.492872
+ "C2" "c3" 0 1 131072 3 6 -0.309807
+ "C3" "c3" 0 1 131072 4 6 -0.244998
+ "C4" "c3" 0 1 131072 5 6 0.334305
+ "O" "oh" 0 1 131072 6 8 -0.689465
+ "H01" "hc" 0 1 131072 7 1 0.033692
+ "H02" "hc" 0 1 131072 8 1 0.033692
+ "H03" "hc" 0 1 131072 9 1 -0.127707
+ "H04" "hc" 0 1 131072 10 1 0.057073
+ "H05" "hc" 0 1 131072 11 1 0.057073
+ "H06" "hc" 0 1 131072 12 1 0.057073
+ "H07" "hc" 0 1 131072 13 1 0.044378
+ "H08" "hc" 0 1 131072 14 1 0.044378
+ "H09" "hc" 0 1 131072 15 1 0.044378
+ "H10" "h1" 0 1 131072 16 1 -0.008424
+ "H11" "h1" 0 1 131072 17 1 -0.008424
+ "H" "ho" 0 1 131072 18 1 0.416066
+!entry.YWC.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
+ "C" "c3" 0 -1 0.0
+ "C1" "c3" 0 -1 0.0
+ "C2" "c3" 0 -1 0.0
+ "C3" "c3" 0 -1 0.0
+ "C4" "c3" 0 -1 0.0
+ "O" "oh" 0 -1 0.0
+ "H01" "hc" 0 -1 0.0
+ "H02" "hc" 0 -1 0.0
+ "H03" "hc" 0 -1 0.0
+ "H04" "hc" 0 -1 0.0
+ "H05" "hc" 0 -1 0.0
+ "H06" "hc" 0 -1 0.0
+ "H07" "hc" 0 -1 0.0
+ "H08" "hc" 0 -1 0.0
+ "H09" "hc" 0 -1 0.0
+ "H10" "h1" 0 -1 0.0
+ "H11" "h1" 0 -1 0.0
+ "H" "ho" 0 -1 0.0
+!entry.YWC.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.YWC.unit.childsequence single int
+ 2
+!entry.YWC.unit.connect array int
+ 0
+ 0
+!entry.YWC.unit.connectivity table  int atom1x  int atom2x  int flags
+ 1 2 1
+ 1 5 1
+ 1 7 1
+ 1 8 1
+ 2 3 1
+ 2 4 1
+ 2 9 1
+ 3 10 1
+ 3 11 1
+ 3 12 1
+ 4 13 1
+ 4 14 1
+ 4 15 1
+ 5 6 1
+ 5 16 1
+ 5 17 1
+ 6 18 1
+!entry.YWC.unit.hierarchy table  str abovetype  int abovex  str belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+ "R" 1 "A" 2
+ "R" 1 "A" 3
+ "R" 1 "A" 4
+ "R" 1 "A" 5
+ "R" 1 "A" 6
+ "R" 1 "A" 7
+ "R" 1 "A" 8
+ "R" 1 "A" 9
+ "R" 1 "A" 10
+ "R" 1 "A" 11
+ "R" 1 "A" 12
+ "R" 1 "A" 13
+ "R" 1 "A" 14
+ "R" 1 "A" 15
+ "R" 1 "A" 16
+ "R" 1 "A" 17
+ "R" 1 "A" 18
+!entry.YWC.unit.name single str
+ "YWC"
+!entry.YWC.unit.positions table  dbl x  dbl y  dbl z
+ -0.487000 -5.437000 -3.114000
+ -0.434000 -6.888000 -3.633000
+ -1.780000 -7.350000 -4.216000
+ -0.001000 -7.840000 -2.503000
+ 0.555000 -5.129000 -2.043000
+ 0.874000 -3.751000 -2.079000
+ -1.466000 -5.300000 -2.654000
+ -0.325000 -4.764000 -3.956000
+ 0.299000 -6.914000 -4.439000
+ -2.505000 -6.540000 -4.141000
+ -1.648000 -7.623000 -5.263000
+ -2.142000 -8.213000 -3.657000
+ 0.881000 -7.436000 -2.006000
+ -0.811000 -7.939000 -1.781000
+ 0.235000 -8.818000 -2.922000
+ 1.454000 -5.715000 -2.232000
+ 0.155000 -5.385000 -1.062000
+ 1.496000 -3.588000 -2.792000
+!entry.YWC.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
+ 0 0 0 0 0 0
+!entry.YWC.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
+ "YWC" 1 19 1 "?" 0
+!entry.YWC.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.YWC.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.YWC.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0

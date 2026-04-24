@@ -1,0 +1,36 @@
+Response 2: Clarification of "8HFW will be used for subsequent studies"
+
+We apologize for the ambiguity of this statement. To clarify the structural modeling strategy:
+
+The 8HFW crystal structure (PDB ID: 8HFW), which shares high sequence identity with BaLIP, was used as the primary protein scaffold due to its reliable crystallographic backbone geometry. However, the substrate-binding pocket of 8HFW lacks the target ligands (isoamyl alcohol, isoamyl acetate, etc.) and may exhibit conformational differences in flexible loop regions relevant to substrate recognition. To address this, we used RoseTTAFold All-Atom (RFAA) to predict the structure of BaLIP with the target substrates docked, yielding a model of the binding pocket in a substrate-bound conformation. The RFAA-predicted active-site region was then structurally aligned and grafted into the 8HFW scaffold to produce a composite model that combines the crystallographic quality of the overall fold with the substrate-adapted pocket geometry from RFAA.
+
+This composite model served as the starting structure for all subsequent MD simulations, PRS analysis, and LigandMPNN-based mutant design. We have revised the manuscript to clearly describe this hybrid modeling workflow and have removed the vague phrase "8HFW will be used for subsequent studies."
+
+---
+Response 3: Revision Regarding the Oligomeric State
+
+We thank the reviewer for pointing out the inaccuracies in our description. We have made the following corrections:
+
+(1) Regarding RFAA: The reviewer is correct that RoseTTAFold-All-Atom (RFAA) is a structural prediction tool and not an MD engine. The original phrasing "RFAA provided the initial conformational hypothesis and conducted molecular dynamics (MD) simulations" was erroneous. We have revised this passage to accurately reflect the workflow: RFAA was used solely for initial protein-ligand complex prediction. All MD simulations were subsequently performed using AMBER 22 (pmemd.cuda) with the RSFF2 force field. We have corrected this language throughout the revised manuscript.
+
+(2) Regarding dimer verification: We acknowledge that the term "verified" overstates our findings, as we did not perform a rigorous thermodynamic assessment (e.g., free energy calculation of dimerization). We have toned down the language to "supported" or "consistent with" throughout. Our evidence for the dimer being the functional form is based on a comparative structural and geometric analysis of independent 1 μs MD simulations for both the monomeric (mo_) and dimeric (di_) forms:
+
+  - Both forms were simulated under identical conditions (3 replicas × 1 μs each).
+  - PRS (Pre-reaction State) analysis showed that the dimeric form exhibits a substantially higher population of catalytically competent conformations (i.e., frames in which the catalytic Ser–substrate distance ≤ 3.5 Å and the Ser–His catalytic base distance ≤ 3.0 Å) compared to the monomeric form.
+  - RMSD and RMSF analyses indicated greater structural stability of the active-site geometry in the dimer.
+
+We have revised the manuscript to present this as a structurally motivated working hypothesis rather than a definitive thermodynamic proof, and we have removed the claim that MD alone "verifies" the dimeric state.
+
+---
+Response 4: PRS Geometric Cutoffs
+
+We have added the following technical details to Section 2.5 of the revised manuscript:
+
+A frame from the MD trajectory is classified as being in the Pre-reaction State (PRS) when it simultaneously satisfies two geometric criteria measured from the catalytic active site:
+
+  (a) The distance between the catalytic serine Oγ atom (nucleophile) and the substrate electrophilic carbon is ≤ 3.5 Å. This threshold captures the spatial proximity required for nucleophilic attack.
+  (b) The distance between the catalytic serine Oγ atom and the Nε2 atom of the catalytic histidine (general base) is ≤ 3.0 Å. This ensures the proton relay network is properly positioned for catalysis.
+
+These cutoffs are based on the typical hydrogen bond distance and van der Waals contact ranges for these atom pairs in serine hydrolases, and are consistent with geometric criteria used in prior computational studies of lipase catalytic mechanisms. For the hydrolysis system (YWZ), an alternative definition using the SerOγ–substrate C distance (≤ 3.5 Å) and the SerOγ–substrate C–substrate O angle (75°–105°, representing the Bürgi–Dunitz trajectory for nucleophilic addition) was also evaluated and yielded consistent results.
+
+The PRS population is reported as the percentage of trajectory frames satisfying both criteria simultaneously, computed via cpptraj from the AMBER suite.

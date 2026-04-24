@@ -1,0 +1,81 @@
+!!index array str
+ "YS"
+!entry.YS.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
+ "C" "c" 0 1 131072 1 6 0.783486
+ "C1" "c3" 0 1 131072 2 6 -0.495782
+ "O" "o" 0 1 131072 3 8 -0.553158
+ "O1" "oh" 0 1 131072 4 8 -0.590925
+ "H01" "hc" 0 1 131072 5 1 0.145359
+ "H02" "hc" 0 1 131072 6 1 0.145359
+ "H03" "hc" 0 1 131072 7 1 0.145359
+ "H" "ho" 0 1 131072 8 1 0.420301
+!entry.YS.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
+ "C" "c" 0 -1 0.0
+ "C1" "c3" 0 -1 0.0
+ "O" "o" 0 -1 0.0
+ "O1" "oh" 0 -1 0.0
+ "H01" "hc" 0 -1 0.0
+ "H02" "hc" 0 -1 0.0
+ "H03" "hc" 0 -1 0.0
+ "H" "ho" 0 -1 0.0
+!entry.YS.unit.boundbox array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.YS.unit.childsequence single int
+ 2
+!entry.YS.unit.connect array int
+ 0
+ 0
+!entry.YS.unit.connectivity table  int atom1x  int atom2x  int flags
+ 1 2 1
+ 1 3 2
+ 1 4 1
+ 2 5 1
+ 2 6 1
+ 2 7 1
+ 4 8 1
+!entry.YS.unit.hierarchy table  str abovetype  int abovex  str belowtype  int belowx
+ "U" 0 "R" 1
+ "R" 1 "A" 1
+ "R" 1 "A" 2
+ "R" 1 "A" 3
+ "R" 1 "A" 4
+ "R" 1 "A" 5
+ "R" 1 "A" 6
+ "R" 1 "A" 7
+ "R" 1 "A" 8
+!entry.YS.unit.name single str
+ "YS"
+!entry.YS.unit.positions table  dbl x  dbl y  dbl z
+ 2.161000 -2.817000 -4.936000
+ 3.288000 -2.905000 -5.943000
+ 1.249000 -3.600000 -4.817000
+ 2.272000 -1.732000 -4.145000
+ 4.184000 -3.286000 -5.453000
+ 3.002000 -3.578000 -6.751000
+ 3.491000 -1.914000 -6.350000
+ 3.096000 -1.810000 -3.636000
+!entry.YS.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
+ 0 0 0 0 0 0
+!entry.YS.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
+ "YS" 1 9 1 "?" 0
+!entry.YS.unit.residuesPdbSequenceNumber array int
+ 0
+!entry.YS.unit.solventcap array dbl
+ -1.000000
+ 0.0
+ 0.0
+ 0.0
+ 0.0
+!entry.YS.unit.velocities table  dbl x  dbl y  dbl z
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
+ 0.0 0.0 0.0
